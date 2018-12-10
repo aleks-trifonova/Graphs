@@ -160,53 +160,70 @@ class Graph {
     }
 
     public void output_bfs(Vertex_Node s) {
-        Queue<Vertex_Node> queue = new LinkedList<>();
         Set<Vertex_Node> set = new HashSet<>();
+        set = output_bfs(set, s);
+        Vertex_Node vertexListTemp = head;
+        while (vertexListTemp != null) {
+            if(!set.contains(vertexListTemp)){
+                set = output_bfs(set, vertexListTemp);
+            }
+            vertexListTemp = vertexListTemp.getNext();
+        }
+    }
+
+    public Set<Vertex_Node> output_bfs(Set<Vertex_Node> set, Vertex_Node s) {
+        Queue<Vertex_Node> queue = new LinkedList<>();
         set.add(s);
         queue.add(s);
         s.setDistance(0);
         s.setParent(new Vertex_Node(null, null));
-        while( head != null ) {
-            while (!queue.isEmpty()) {
-                Vertex_Node temp = queue.remove();
-                System.out.println(temp.getName() + ", " + temp.getDistance() + ", " + temp.getParent().getName());
-                Edge_Node listTemp = temp.getNbrList();
-                while (listTemp != null) {
-                    if (!set.contains(listTemp.getTarget())) {
-                        listTemp.getTarget().setParent(temp);
-                        listTemp.getTarget().setDistance(temp.getDistance() + 1);
-                        set.add(listTemp.getTarget());
-                        queue.add(listTemp.getTarget());
-                    }
-                    listTemp = listTemp.getNext();
-                }
-            }
-        }
-    }
-
-    public void output_dfs(Vertex_Node s) {
-        Set<Vertex_Node> set = new HashSet<>();
-        set.add(s);
-        s.setDistance(0);
-        s.setParent(new Vertex_Node(null, null));
-        set = output_dfs(set, s);
-    }
-
-    public Set<Vertex_Node> output_dfs(Set<Vertex_Node> set, Vertex_Node s) {
-        System.out.println(s.getName() + ", " + s.getDistance() + ", " + s.getParent().getName());
-        Edge_Node listTemp = s.getNbrList();
-        while(s != null) {
+        while (!queue.isEmpty()) {
+            Vertex_Node temp = queue.remove();
+            System.out.println(temp.getName() + ", " + temp.getDistance() + ", " + temp.getParent().getName());
+            Edge_Node listTemp = temp.getNbrList();
             while (listTemp != null) {
                 if (!set.contains(listTemp.getTarget())) {
-                    listTemp.getTarget().setParent(s);
-                    listTemp.getTarget().setDistance(s.getDistance() + 1);
+                    listTemp.getTarget().setParent(temp);
+                    listTemp.getTarget().setDistance(temp.getDistance() + 1);
                     set.add(listTemp.getTarget());
-                    set = output_dfs(set, listTemp.getTarget());
+                    queue.add(listTemp.getTarget());
                 }
                 listTemp = listTemp.getNext();
             }
         }
-            return set;
+        return set;
+    }
+
+    public void output_dfs(Vertex_Node s) {
+        Set<Vertex_Node> set = new HashSet<>();
+        s.setDistance(0);
+        s.setParent(new Vertex_Node(null, null));
+        set = output_dfs(set, s);
+        Vertex_Node vertexListTemp = head;
+        while (vertexListTemp != null) {
+            if(!set.contains(vertexListTemp)){
+                vertexListTemp.setDistance(0);
+                vertexListTemp.setParent(new Vertex_Node(null, null));
+                set = output_dfs(set, vertexListTemp);
+            }
+            vertexListTemp = vertexListTemp.getNext();
+        }
+    }
+
+    public Set<Vertex_Node> output_dfs(Set<Vertex_Node> set, Vertex_Node s) {
+        set.add(s);
+        System.out.println(s.getName() + ", " + s.getDistance() + ", " + s.getParent().getName());
+        Edge_Node listTemp = s.getNbrList();
+        while (listTemp != null) {
+            if (!set.contains(listTemp.getTarget())) {
+                listTemp.getTarget().setParent(s);
+                listTemp.getTarget().setDistance(s.getDistance() + 1);
+                set.add(listTemp.getTarget());
+                set = output_dfs(set, listTemp.getTarget());
+            }
+            listTemp = listTemp.getNext();
+        }
+        return set;
     }
 
     // If you implemented DFS then leave this method the way it is
@@ -216,6 +233,6 @@ class Graph {
     }
 
     public static String myName() {
-        return "Santa Claus";
+        return "Aleksandra Trifonova";
     }
 }
